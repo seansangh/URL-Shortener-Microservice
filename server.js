@@ -30,6 +30,7 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
 });
+
 var wSearch="";
 
 app.get("/api/shorturl/:new?", function(req,res){
@@ -37,7 +38,13 @@ app.get("/api/shorturl/:new?", function(req,res){
 req.params['new']
 
   Persona.find({}, function(err,data){
-    res.redirect(data[req.params['new']].url);
+    console.log(req.params.new+" "+data.length);
+    if(req.params.new>(data.length-1)){
+      res.send('Invalid url')
+    }
+    else{
+      res.redirect(data[req.params['new']].url);
+    }
   })
 
 })
@@ -64,6 +71,7 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 
 });
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -111,10 +119,6 @@ if(err){return err;}
     })
       }
   })
-    
-    
-    
- 
 
      }
   else{
